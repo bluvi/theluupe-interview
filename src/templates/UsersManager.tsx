@@ -35,7 +35,7 @@ export function UsersManager({ users }: IUsersManagerProps): JSX.Element {
 }
 
 UsersManager.defaultProps = {
-  users: undefined,
+  users: [],
 };
 
 const CustomButton = styled(Button)`

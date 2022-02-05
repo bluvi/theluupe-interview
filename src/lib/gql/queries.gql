@@ -5,3 +5,9 @@ query GetUsers {
     ...UserInfo
   }
 }
+
+query GetPosts {
+  posts {
+    ...PostInfo
+  }
+}

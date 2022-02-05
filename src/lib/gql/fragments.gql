@@ -14,3 +14,13 @@ fragment UserToken on UserTokenResponse {
   }
   accessToken
 }
+
+fragment PostInfo on Post {
+  id
+  createdAt
+  updatedAt
+  text
+  author {
+    fullName
+  }
+}

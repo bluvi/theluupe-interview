@@ -8,7 +8,11 @@ function decodeAuthHeader(authHeader) {
     return null;
   }
 
-  return jwt.verify(token, config.jwtSecret);
+  try {
+    return jwt.verify(token, config.jwtSecret);
+  } catch (e) {
+    return null;
+  }
 }
 
 module.exports = {
