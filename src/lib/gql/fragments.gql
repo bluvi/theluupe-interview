@@ -5,3 +5,11 @@ fragment UserInfo on User {
   lastName
   fullName
 }
+
+fragment UserToken on UserTokenResponse {
+  user {
+    email
+    fullName
+  }
+  accessToken
+}

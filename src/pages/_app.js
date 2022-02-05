@@ -13,6 +13,7 @@ import 'rc-slider/assets/index.css';
 import 'react-day-picker/lib/style.css';
 import 'react-notifications-component/dist/theme.css';
 import '@szhsin/react-menu/dist/index.css';
+import { UserContext } from '@atoms/UserContext';
 
 Router.events.on('routeChangeComplete', () => {
   window.scrollTo(0, 0);
@@ -34,7 +35,7 @@ const globalStyles = css`
 
 const WebApp = ({ Component, pageProps }) => {
   return (
-    <>
+    <UserContext.Provider>
       <Head>
         <title>The Luupe</title>
         <link rel="icon" type="image/png" href="/favicon.png" />
@@ -44,7 +45,7 @@ const WebApp = ({ Component, pageProps }) => {
 
       <ReactNotification />
       <Component {...pageProps} />
-    </>
+    </UserContext.Provider>
   );
 };
 WebApp.propTypes = {

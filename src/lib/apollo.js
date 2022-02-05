@@ -7,6 +7,7 @@ import { HttpLink } from 'apollo-link-http';
 import fetch from 'isomorphic-unfetch';
 import Head from 'next/head';
 import React from 'react';
+import { setContext } from 'apollo-link-context';
 
 import { log } from '@shared/lib/logger';
 import { addNotification } from './notifications';
@@ -56,10 +57,19 @@ function createApolloClient(initialState = {}) {
     // },
     fetch,
   });
+  const authLink = setContext((_, { headers }) => {
+    const token = typeof window !== 'undefined' && localStorage.getItem('accessToken');
+    return {
+      headers: {
+        ...headers,
+        Authorization: token ? `Bearer ${token}` : '',
+      },
+    };
+  });
   return new ApolloClient({
     // Disable forceFetch on the server (so queries are only run once)
     ssrMode: isSSR,
-    link: ApolloLink.from([errorLink, httpLink]),
+    link: ApolloLink.from([errorLink, authLink, httpLink]),
     cache: new InMemoryCache(cacheOptions).restore(initialState),
   });
 }

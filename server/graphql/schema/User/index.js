@@ -24,8 +24,8 @@ const User = objectType({
   },
 });
 
-const SignUpData = inputObjectType({
-  name: 'SignUpData',
+const SignUpInput = inputObjectType({
+  name: 'SignUpInput',
   definition(t) {
     t.nonNull.string('email');
     t.nullable.string('firstName');
@@ -34,8 +34,8 @@ const SignUpData = inputObjectType({
   },
 });
 
-const SignInData = inputObjectType({
-  name: 'SignInData',
+const SignInInput = inputObjectType({
+  name: 'SignInInput',
   definition(t) {
     t.nonNull.string('email');
     t.nonNull.string('password');
@@ -55,7 +55,7 @@ const UserTokenResponse = objectType({
 
 module.exports = {
   User,
-  SignUpData,
-  SignInData,
+  SignUpInput,
+  SignInInput,
   UserTokenResponse,
 };

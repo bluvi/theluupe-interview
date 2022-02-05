@@ -40,13 +40,13 @@ const r = {
 
 const permissions = {
   Query: {
-    user: r.isAuthenticatedUser,
-    users: r.isAuthenticatedUser,
+    user: r.isAnybody,
+    users: r.isAnybody,
     post: r.isAnybody,
     posts: r.isAnybody,
   },
   Mutation: {
-    createOneUser: r.isAuthenticatedUser,
+    createOneUser: r.isAnybody,
     updateOneUser: r.isSameUser,
     signUp: r.isAnybody,
     signIn: r.isAnybody,

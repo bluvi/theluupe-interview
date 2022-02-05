@@ -5,6 +5,7 @@ module.exports = {
   env: {
     commonjs: true,
     es2020: true,
+    browser: true,
   },
   globals: {
     fetch: false,

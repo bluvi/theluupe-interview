@@ -1,5 +1,5 @@
 const { mutationType } = require('nexus');
-const { SignUpData, SignInData } = require('./User');
+const { SignUpInput, SignInInput } = require('./User');
 const { signUp, signIn } = require('./User/resolvers');
 
 const Mutation = mutationType({
@@ -9,14 +9,14 @@ const Mutation = mutationType({
     t.field('signUp', {
       type: 'UserTokenResponse',
       args: {
-        data: SignUpData,
+        data: SignUpInput,
       },
       resolve: signUp,
     });
     t.field('signIn', {
       type: 'UserTokenResponse',
       args: {
-        data: SignInData,
+        data: SignInInput,
       },
       resolve: signIn,
     });

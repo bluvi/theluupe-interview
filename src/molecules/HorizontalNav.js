@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import Nav from 'react-bootstrap/Nav';
 
 import Logo from '@assets/logos/theluupe.svg';
+import { UserContext } from '@atoms/UserContext';
 
 export const HEADER_HEIGHT = '84px';
 
 export function HorizontalNav() {
-  const currentUser = {
-    isAuthenticated: false,
+  const { accessToken, fullName, isTokenValid, loading, clearTokens } = UserContext.useContainer();
+  const isAuthenticated = !!accessToken;
+
+  useEffect(() => {
+    if (!loading && !isTokenValid()) {
+      clearTokens();
+    }
+  }, [loading, isTokenValid, clearTokens]);
+
+  const handleLogOut = useCallback(() => {
+    clearTokens();
+  }, [clearTokens]);
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      handleLogOut();
+    }
   };
-  const { isAuthenticated } = currentUser;
 
   return (
     <header>
@@ -45,17 +60,26 @@ export function HorizontalNav() {
             </a>
           </Nav.Item>
         </div>
-        {/* {isAuthenticated && (
+        {isAuthenticated && (
           <Nav.Item>
-            <UserMenu currentUser={currentUser} />
+            <Name>{fullName}</Name>
+            <a
+              className="btn btn-secondary"
+              role="button"
+              tabIndex={0}
+              onClick={handleLogOut}
+              onKeyPress={handleKeyPress}
+            >
+              Log Out
+            </a>
           </Nav.Item>
-        )} */}
+        )}
         {!isAuthenticated && (
           <Nav.Item className="mr-1">
-            <a className="btn btn-secondary" href="/auth/login">
+            <a className="btn btn-secondary" href="/sign-in">
               Log in
             </a>
-            <a className="btn btn-primary text-white ml-3" href="/auth/signup">
+            <a className="btn btn-primary text-white ml-3" href="/sign-up">
               Sign up
             </a>
           </Nav.Item>
@@ -75,4 +99,8 @@ const Wrapper = styled(Nav)`
   position: fixed;
   width: 100%;
   top: 0;
+`;
+
+const Name = styled.span`
+  margin-right: 20px;
 `;
