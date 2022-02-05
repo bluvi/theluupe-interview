@@ -8,6 +8,7 @@ const Post = objectType({
     t.model.updatedAt();
     t.model.author();
     t.model.authorId();
+    t.model.title();
     t.model.text();
   },
 });
