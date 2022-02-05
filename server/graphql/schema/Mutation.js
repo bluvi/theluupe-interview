@@ -5,6 +5,7 @@ const { signUp, signIn } = require('./User/resolvers');
 const Mutation = mutationType({
   definition(t) {
     t.crud.createOneUser();
+    t.crud.updateOneUser();
     t.field('signUp', {
       type: 'UserTokenResponse',
       args: {

@@ -2,6 +2,7 @@ const { nexusPrisma } = require('nexus-plugin-prisma');
 const { makeSchema, declarativeWrappingPlugin } = require('nexus');
 const prisma = require('../lib/prisma');
 const types = require('./schema');
+const { decodeAuthHeader } = require('../utils/decode-auth-header');
 
 const schema = makeSchema({
   types,
@@ -12,10 +13,12 @@ const schema = makeSchema({
   },
 });
 
-const context = request => {
+const context = ({ request }) => {
+  const token = request?.headers?.authorization ? decodeAuthHeader(request.headers.authorization) : null;
   return {
     ...request,
     prisma,
+    userId: token?.id,
   };
 };
 
