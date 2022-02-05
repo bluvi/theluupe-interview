@@ -13,7 +13,7 @@ const User = objectType({
     t.list.field('posts', {
       type: 'Post',
       resolve(root, _args, context) {
-        return context.prisma.user.findFirst({ where: { id: root.id } }).posts();
+        return context.prisma.user.findUnique({ where: { id: root.id } }).posts();
       },
     });
     t.int('totalPosts', {
