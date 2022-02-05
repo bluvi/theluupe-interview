@@ -10,6 +10,12 @@ const User = objectType({
     t.model.firstName();
     t.model.lastName();
     t.string('fullName', { resolve: fullName });
+    t.list.field('posts', {
+      type: 'Post',
+      resolve(root, args, context) {
+        return context.prisma.user.findFirst({ where: { id: root.id } }).posts();
+      },
+    });
   },
 });
 

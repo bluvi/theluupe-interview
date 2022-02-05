@@ -19,6 +19,9 @@ const Mutation = mutationType({
       },
       resolve: signIn,
     });
+    t.crud.createOnePost();
+    t.crud.updateOnePost();
+    t.crud.deleteOnePost();
   },
 });
 
