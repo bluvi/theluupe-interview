@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "dev": "node ./server/index.js",
+    "dev": "nodemon --watch server -e js --exec 'node ./server/index.js'",
     "start": "node ./server/index.js",
     "postinstall": "prisma generate"
   },
@@ -31,6 +31,7 @@
     "apollo-link-http": "^1.5.16",
     "array-move": "^2.2.2",
     "autosize": "^4.0.2",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "body-scroll-lock": "^2.7.0",
     "bootstrap": "^4.4.1",
