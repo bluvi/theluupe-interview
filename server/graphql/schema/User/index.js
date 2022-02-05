@@ -12,8 +12,13 @@ const User = objectType({
     t.string('fullName', { resolve: fullName });
     t.list.field('posts', {
       type: 'Post',
-      resolve(root, args, context) {
+      resolve(root, _args, context) {
         return context.prisma.user.findFirst({ where: { id: root.id } }).posts();
+      },
+    });
+    t.int('totalPosts', {
+      resolve(root, _args, context) {
+        return context.prisma.post.count({ where: { authorId: root.id } });
       },
     });
   },
