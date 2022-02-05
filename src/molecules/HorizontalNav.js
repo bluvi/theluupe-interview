@@ -59,6 +59,11 @@ export function HorizontalNav() {
               MAGAZINE
             </a>
           </Nav.Item>
+          <Nav.Item className="mr-1">
+            <Link href="/posts">
+              <a className="nav-link">POSTS</a>
+            </Link>
+          </Nav.Item>
         </div>
         {isAuthenticated && (
           <Nav.Item>
