@@ -1,16 +1,36 @@
+import { useMutation } from '@apollo/react-hooks';
 import { Icon } from '@atoms/Icon';
 import { UserContext } from '@atoms/UserContext';
 import { IPost } from '@dal/Post';
 import styled from '@emotion/styled';
-import React from 'react';
+import { DeleteOnePost } from '@lib/gql/mutations.gql';
+import { DeleteModal } from '@organisms/DeleteModal';
+import React, { useCallback, useState } from 'react';
 
 interface IPostProps {
   post: IPost;
+  refetchPosts: () => Promise<void>;
 }
 
-export function Post({ post }: IPostProps): JSX.Element {
+export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
+  const [deleteOnePost, { loading }] = useMutation(DeleteOnePost);
+  const [showDeletePostModal, setShowDeletePostModal] = useState(false);
   const { userId } = UserContext.useContainer();
   const canManagePost = userId === post.author.id;
+
+  const deletePostModalOnCloseHandler = useCallback(() => setShowDeletePostModal(false), [setShowDeletePostModal]);
+  const deletePostModalOnOpenHandler = useCallback(() => setShowDeletePostModal(true), [setShowDeletePostModal]);
+
+  const handleDelete = useCallback(async () => {
+    const deleteResults = await deleteOnePost({
+      variables: {
+        data: { id: post.id },
+      },
+    });
+    await refetchPosts();
+    deletePostModalOnCloseHandler();
+    return deleteResults;
+  }, [refetchPosts, deleteOnePost, deletePostModalOnCloseHandler, post.id]);
 
   return (
     <div key={post.id}>
@@ -19,13 +39,20 @@ export function Post({ post }: IPostProps): JSX.Element {
         <ActionIcon disabled={!canManagePost} role="button" onClick={() => {}}>
           <Icon icon="edit" size={18} />
         </ActionIcon>
-        <ActionIcon disabled={!canManagePost} role="button" onClick={() => {}}>
+        <ActionIcon disabled={!canManagePost} role="button" onClick={deletePostModalOnOpenHandler}>
           <Icon icon="trash" size={18} />
         </ActionIcon>
       </TitleContainer>
       <p>{`By ${post.author.fullName}`}</p>
       <p>{formatDateTime(post.createdAt)}</p>
       <p>{post.text}</p>
+      <DeleteModal
+        text={post.title}
+        show={showDeletePostModal}
+        isLoading={loading}
+        onClose={deletePostModalOnCloseHandler}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

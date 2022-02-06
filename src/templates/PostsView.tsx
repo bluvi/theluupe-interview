@@ -19,6 +19,7 @@ export function PostsView({ posts, refetchPosts }: IPostsManagerProps): JSX.Elem
 
   const newPostModalOnCloseHandler = useCallback(() => setShowNewPostModal(false), [setShowNewPostModal]);
   const newPostModalOnOpenHandler = useCallback(() => setShowNewPostModal(true), [setShowNewPostModal]);
+
   return (
     <CentralizeWrapper width="60%">
       {isAuthenticated && (
@@ -28,7 +29,7 @@ export function PostsView({ posts, refetchPosts }: IPostsManagerProps): JSX.Elem
       )}
 
       {posts.map(post => (
-        <Post key={post.id} post={post} />
+        <Post key={post.id} post={post} refetchPosts={refetchPosts} />
       ))}
 
       <AddPostModal show={showNewPostModal} onClose={newPostModalOnCloseHandler} refetchPosts={refetchPosts} />

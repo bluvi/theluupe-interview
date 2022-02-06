@@ -12,6 +12,12 @@ mutation CreateOnePost($data: PostCreateInput!) {
   }
 }
 
+mutation DeleteOnePost($data: PostWhereUniqueInput!) {
+  deleteOnePost(where: $data) {
+    id
+  }
+}
+
 mutation SignIn($data: SignInInput!) {
   signIn(data: $data) {
     ...UserToken

@@ -33,7 +33,7 @@ export function AddPostModal({ show, onClose, refetchPosts }: IAddPostModalProps
       onClose();
       return createResults;
     },
-    [onClose, createOnePost],
+    [onClose, createOnePost, userId, refetchPosts],
   );
 
   return (

@@ -1,10 +1,8 @@
+import { WithOptional } from '@lib/util/types';
+import { ModalHeader } from '@molecules/ModalHeader';
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
-import { WithOptional } from '@lib/util/types';
-
-import { ModalHeader } from '@molecules/ModalHeader';
 
 export type IDeleteModalProps = {
   text?: string;
@@ -30,7 +28,7 @@ export function DeleteModal({
   return (
     <Modal show={show} centered onHide={onClose}>
       <ModalHeader as="h4" title="Are you sure?" onClose={onClose} />
-      <Modal.Body>{customText || `Are you sure you want to delete ${text}? This cannot be undone.`}</Modal.Body>
+      <Modal.Body>{customText || `Are you sure you want to delete ${text || ''}? This cannot be undone.`}</Modal.Body>
       <Modal.Footer>
         <Button variant="danger" onClick={onConfirm} disabled={isLoading}>
           {buttonText || (isLoading ? `Deleting...` : `Yes, delete ${text || ''}`)}
