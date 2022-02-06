@@ -18,6 +18,7 @@ export const UserContext = createContainer(useUser);
 function useUser() {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [fullName, setFullName] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,6 +42,7 @@ function useUser() {
   const setUserInfo = (token: string) => {
     const decodedToken = jwt.decode(token) as DecodedToken;
     setFullName(`${decodedToken.firstName} ${decodedToken.lastName}`.trim());
+    setUserId(decodedToken.id);
   };
 
   const isTokenValid = () => {
@@ -59,10 +61,12 @@ function useUser() {
   const clearTokens = () => {
     setAccessToken(null);
     setFullName(null);
+    setUserId(null);
     localStorage.removeItem(accessTokenKey);
   };
 
   return {
+    userId,
     accessToken,
     isTokenValid,
     fullName,

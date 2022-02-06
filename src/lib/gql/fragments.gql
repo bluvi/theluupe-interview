@@ -19,8 +19,10 @@ fragment PostInfo on Post {
   id
   createdAt
   updatedAt
+  title
   text
   author {
+    id
     fullName
   }
 }

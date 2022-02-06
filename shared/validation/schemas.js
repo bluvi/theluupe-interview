@@ -6,6 +6,11 @@ export const User = yup.object().shape({
   email: yup.string().email('Please enter a valid email address.'),
 });
 
+export const Post = yup.object().shape({
+  title: yup.string().required('Please enter the title of your post.'),
+  text: yup.string().required('Please enter your post.'),
+});
+
 export const SignIn = yup.object().shape({
   email: yup
     .string()

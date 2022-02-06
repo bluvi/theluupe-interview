@@ -35,7 +35,7 @@ export function SignInTemplate(): JSX.Element {
   );
 
   return (
-    <CentralizeWrapper>
+    <CentralizeWrapper width="40%">
       <Formik initialValues={{}} onSubmit={handleSubmit} validationSchema={SignInSchema}>
         {() => (
           <Form>

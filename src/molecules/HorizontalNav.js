@@ -5,12 +5,14 @@ import Nav from 'react-bootstrap/Nav';
 
 import Logo from '@assets/logos/theluupe.svg';
 import { UserContext } from '@atoms/UserContext';
+import { useRouter } from 'next/router';
 
 export const HEADER_HEIGHT = '84px';
 
 export function HorizontalNav() {
-  const { accessToken, fullName, isTokenValid, loading, clearTokens } = UserContext.useContainer();
-  const isAuthenticated = !!accessToken;
+  const router = useRouter();
+  const { userId, fullName, isTokenValid, loading, clearTokens } = UserContext.useContainer();
+  const isAuthenticated = !!userId;
 
   useEffect(() => {
     if (!loading && !isTokenValid()) {
@@ -20,7 +22,8 @@ export function HorizontalNav() {
 
   const handleLogOut = useCallback(() => {
     clearTokens();
-  }, [clearTokens]);
+    router.push('/');
+  }, [clearTokens, router]);
 
   const handleKeyPress = event => {
     if (event.key === 'Enter') {

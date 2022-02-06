@@ -8,12 +8,12 @@ import { PostsView } from '@templates/PostsView';
 import { GetPosts } from '@lib/gql/queries.gql';
 
 function Posts() {
-  const { data, loading } = useQuery(GetPosts);
+  const { data, loading, refetch } = useQuery(GetPosts);
   const posts = data?.posts || [];
 
   return (
     <PublicLayout loading={loading}>
-      <PostsView posts={posts} />
+      <PostsView posts={posts} refetchPosts={refetch} />
     </PublicLayout>
   );
 }

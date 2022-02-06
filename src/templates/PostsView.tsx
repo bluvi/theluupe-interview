@@ -1,37 +1,40 @@
+import { CentralizeWrapper } from '@atoms/CentralizeWrapper';
+import { UserContext } from '@atoms/UserContext';
 import { IPost } from '@dal/Post';
 import styled from '@emotion/styled';
-import { Table } from '@molecules/Table';
-import React from 'react';
+import { Post } from '@molecules/Post';
+import { AddPostModal } from '@organisms/AddPostModal';
+import React, { useCallback, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 type IPostsManagerProps = {
   posts: IPost[];
+  refetchPosts: () => Promise<void>;
 };
 
-const columns = [
-  { Header: 'Author', accessor: 'author.fullName' },
-  { Header: 'Post', accessor: 'text' },
-  { Header: 'Created at', accessor: 'createdAt' },
-  { Header: 'Updated at', accessor: 'updatedAt' },
-];
+export function PostsView({ posts, refetchPosts }: IPostsManagerProps): JSX.Element {
+  const [showNewPostModal, setShowNewPostModal] = useState(false);
+  const { userId } = UserContext.useContainer();
+  const isAuthenticated = !!userId;
 
-export function PostsView({ posts }: IPostsManagerProps): JSX.Element {
+  const newPostModalOnCloseHandler = useCallback(() => setShowNewPostModal(false), [setShowNewPostModal]);
+  const newPostModalOnOpenHandler = useCallback(() => setShowNewPostModal(true), [setShowNewPostModal]);
   return (
-    <>
-      {/* <CustomButton variant="link" onClick={userModalOnOpenHandler}>
-        Add Post
-      </CustomButton> */}
+    <CentralizeWrapper width="60%">
+      {isAuthenticated && (
+        <CustomButton variant="link" onClick={newPostModalOnOpenHandler}>
+          Add Post
+        </CustomButton>
+      )}
 
-      <Table data={posts} columns={columns} />
+      {posts.map(post => (
+        <Post key={post.id} post={post} />
+      ))}
 
-      {/* <AddUserModal show={showUserModal} onClose={userModalOnCloseHandler} /> */}
-    </>
+      <AddPostModal show={showNewPostModal} onClose={newPostModalOnCloseHandler} refetchPosts={refetchPosts} />
+    </CentralizeWrapper>
   );
 }
-
-PostsView.defaultProps = {
-  posts: [],
-};
 
 const CustomButton = styled(Button)`
   padding: 0;

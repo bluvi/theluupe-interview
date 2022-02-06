@@ -1,12 +1,16 @@
 import styled from '@emotion/styled';
 import React from 'react';
 
-function CentralizeWrapper({ children }: React.PropsWithChildren<Record<never, never>>): JSX.Element {
-  return <Wrapper>{children}</Wrapper>;
+interface ICentralizeWrapper {
+  width: string;
 }
 
-const Wrapper = styled.div`
-  width: 40%;
+function CentralizeWrapper({ width, children }: React.PropsWithChildren<ICentralizeWrapper>): JSX.Element {
+  return <Wrapper width={width}>{children}</Wrapper>;
+}
+
+const Wrapper = styled.div<ICentralizeWrapper>`
+  ${props => `width: ${props.width}`};
   display: flex;
   flex-direction: column;
   justify-content: center;
