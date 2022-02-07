@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { ColGroup, Form, Formik, Row } from '@atoms/Form';
 import { UserContext } from '@atoms/UserContext';
 import { IPost } from '@dal/Post';
-import { CreateOnePost } from '@lib/gql/mutations.gql';
+import { CreateOnePost, UpdateOnePost } from '@lib/gql/mutations.gql';
 import { SubmitButton } from '@molecules/forms/SubmitButton';
 import { TextField } from '@molecules/forms/TextField';
 import { ModalHeader } from '@molecules/ModalHeader';
@@ -12,33 +12,44 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 export type IAddPostModalProps = {
+  post?: IPost;
   show: boolean;
   onClose: () => void;
   refetchPosts: () => Promise<void>;
 };
 
-export function AddPostModal({ show, onClose, refetchPosts }: IAddPostModalProps): JSX.Element {
+export function UpsertPostModal({ post, show, onClose, refetchPosts }: IAddPostModalProps): JSX.Element {
   const [createOnePost] = useMutation(CreateOnePost);
-  const initialValues = {};
+  const [updateOnePost] = useMutation(UpdateOnePost);
+  const initialValues = { title: post?.title, text: post?.text };
   const { userId } = UserContext.useContainer();
+  const isNewPost = !post;
 
   const handleSubmit = useCallback(
-    async (post: Partial<IPost>) => {
-      const createResults = await createOnePost({
-        variables: {
-          data: { ...post, author: { connect: { id: userId } } },
-        },
-      });
+    async (upsertPost: Partial<IPost>) => {
+      if (post) {
+        await updateOnePost({
+          variables: {
+            data: { title: { set: upsertPost.title }, text: { set: upsertPost.text } },
+            where: { id: post.id },
+          },
+        });
+      } else {
+        await createOnePost({
+          variables: {
+            data: { ...upsertPost, author: { connect: { id: userId } } },
+          },
+        });
+      }
       await refetchPosts();
       onClose();
-      return createResults;
     },
-    [onClose, createOnePost, userId, refetchPosts],
+    [onClose, createOnePost, updateOnePost, post, userId, refetchPosts],
   );
 
   return (
     <Modal show={show} centered onHide={onClose}>
-      <ModalHeader title="Add a post" onClose={onClose} />
+      <ModalHeader title={`${isNewPost ? 'Add a' : 'Update'} post`} onClose={onClose} />
       <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={PostSchema}>
         {({ isSubmitting }) => (
           <Form>
@@ -55,7 +66,7 @@ export function AddPostModal({ show, onClose, refetchPosts }: IAddPostModalProps
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              <SubmitButton>Add</SubmitButton>
+              <SubmitButton>{isNewPost ? 'Add' : 'Update'}</SubmitButton>
               <Button disabled={isSubmitting} variant="secondary" onClick={onClose}>
                 Cancel
               </Button>

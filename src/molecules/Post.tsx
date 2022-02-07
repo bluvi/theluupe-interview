@@ -5,6 +5,7 @@ import { IPost } from '@dal/Post';
 import styled from '@emotion/styled';
 import { DeleteOnePost } from '@lib/gql/mutations.gql';
 import { DeleteModal } from '@organisms/DeleteModal';
+import { UpsertPostModal } from '@organisms/UpsertPostModal';
 import React, { useCallback, useState } from 'react';
 
 interface IPostProps {
@@ -15,16 +16,19 @@ interface IPostProps {
 export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
   const [deleteOnePost, { loading }] = useMutation(DeleteOnePost);
   const [showDeletePostModal, setShowDeletePostModal] = useState(false);
+  const [showUpsertPostModal, setShowUpsertPostModal] = useState(false);
   const { userId } = UserContext.useContainer();
   const canManagePost = userId === post.author.id;
 
   const deletePostModalOnCloseHandler = useCallback(() => setShowDeletePostModal(false), [setShowDeletePostModal]);
   const deletePostModalOnOpenHandler = useCallback(() => setShowDeletePostModal(true), [setShowDeletePostModal]);
+  const upsertPostModalOnCloseHandler = useCallback(() => setShowUpsertPostModal(false), [setShowUpsertPostModal]);
+  const upsertPostModalOnOpenHandler = useCallback(() => setShowUpsertPostModal(true), [setShowUpsertPostModal]);
 
   const handleDelete = useCallback(async () => {
     const deleteResults = await deleteOnePost({
       variables: {
-        data: { id: post.id },
+        where: { id: post.id },
       },
     });
     await refetchPosts();
@@ -36,7 +40,7 @@ export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
     <div key={post.id}>
       <TitleContainer>
         <h3>{post.title}</h3>
-        <ActionIcon disabled={!canManagePost} role="button" onClick={() => {}}>
+        <ActionIcon disabled={!canManagePost} role="button" onClick={upsertPostModalOnOpenHandler}>
           <Icon icon="edit" size={18} />
         </ActionIcon>
         <ActionIcon disabled={!canManagePost} role="button" onClick={deletePostModalOnOpenHandler}>
@@ -52,6 +56,12 @@ export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
         isLoading={loading}
         onClose={deletePostModalOnCloseHandler}
         onConfirm={handleDelete}
+      />
+      <UpsertPostModal
+        post={post}
+        show={showUpsertPostModal}
+        onClose={upsertPostModalOnCloseHandler}
+        refetchPosts={refetchPosts}
       />
     </div>
   );

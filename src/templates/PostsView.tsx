@@ -3,7 +3,7 @@ import { UserContext } from '@atoms/UserContext';
 import { IPost } from '@dal/Post';
 import styled from '@emotion/styled';
 import { Post } from '@molecules/Post';
-import { AddPostModal } from '@organisms/AddPostModal';
+import { UpsertPostModal } from '@organisms/UpsertPostModal';
 import React, { useCallback, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
@@ -13,17 +13,17 @@ type IPostsManagerProps = {
 };
 
 export function PostsView({ posts, refetchPosts }: IPostsManagerProps): JSX.Element {
-  const [showNewPostModal, setShowNewPostModal] = useState(false);
+  const [showUpsertPostModal, setShowUpsertPostModal] = useState(false);
   const { userId } = UserContext.useContainer();
   const isAuthenticated = !!userId;
 
-  const newPostModalOnCloseHandler = useCallback(() => setShowNewPostModal(false), [setShowNewPostModal]);
-  const newPostModalOnOpenHandler = useCallback(() => setShowNewPostModal(true), [setShowNewPostModal]);
+  const upsertPostModalOnCloseHandler = useCallback(() => setShowUpsertPostModal(false), [setShowUpsertPostModal]);
+  const upsertPostModalOnOpenHandler = useCallback(() => setShowUpsertPostModal(true), [setShowUpsertPostModal]);
 
   return (
     <CentralizeWrapper width="60%">
       {isAuthenticated && (
-        <CustomButton variant="link" onClick={newPostModalOnOpenHandler}>
+        <CustomButton variant="link" onClick={upsertPostModalOnOpenHandler}>
           Add Post
         </CustomButton>
       )}
@@ -32,7 +32,7 @@ export function PostsView({ posts, refetchPosts }: IPostsManagerProps): JSX.Elem
         <Post key={post.id} post={post} refetchPosts={refetchPosts} />
       ))}
 
-      <AddPostModal show={showNewPostModal} onClose={newPostModalOnCloseHandler} refetchPosts={refetchPosts} />
+      <UpsertPostModal show={showUpsertPostModal} onClose={upsertPostModalOnCloseHandler} refetchPosts={refetchPosts} />
     </CentralizeWrapper>
   );
 }
