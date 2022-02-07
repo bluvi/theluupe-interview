@@ -6,9 +6,9 @@ query GetUsers {
   }
 }
 
-query GetUserPosts($userId: String!) {
-  user(where: { id: $userId}) {
-    ...UserPosts
+query GetPostsByUser($authorId: String!) {
+  postsByUser(data: { authorId: $authorId }) {
+    ...PostInfo
   }
 }
 

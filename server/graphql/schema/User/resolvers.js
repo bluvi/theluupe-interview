@@ -12,7 +12,7 @@ function fullName(parent) {
 
 async function signUp(_, args, context) {
   const { data } = args;
-  const existingUser = await context.prisma.user.findFirst({
+  const existingUser = await context.prisma.user.findUnique({
     where: {
       email: data.email,
     },

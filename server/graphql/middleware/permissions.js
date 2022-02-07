@@ -44,6 +44,7 @@ const permissions = {
     users: r.isAnybody,
     post: r.isAnybody,
     posts: r.isAnybody,
+    postsByUser: r.isAuthenticatedUser,
   },
   Mutation: {
     createOneUser: r.isAnybody,
