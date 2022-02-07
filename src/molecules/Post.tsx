@@ -6,19 +6,23 @@ import styled from '@emotion/styled';
 import { DeleteOnePost } from '@lib/gql/mutations.gql';
 import { DeleteModal } from '@organisms/DeleteModal';
 import { UpsertPostModal } from '@organisms/UpsertPostModal';
+import { ISelectedAuthor } from '@pages/posts';
+import { ApolloQueryResult } from 'apollo-client';
 import React, { useCallback, useState } from 'react';
 
 interface IPostProps {
   post: IPost;
-  refetchPosts: () => Promise<void>;
+  refetchPosts: () => Promise<ApolloQueryResult<unknown>>;
+  selectAuthor: (author: ISelectedAuthor) => void;
 }
 
-export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
+export function Post({ post, refetchPosts, selectAuthor }: IPostProps): JSX.Element {
   const [deleteOnePost, { loading }] = useMutation(DeleteOnePost);
   const [showDeletePostModal, setShowDeletePostModal] = useState(false);
   const [showUpsertPostModal, setShowUpsertPostModal] = useState(false);
   const { userId } = UserContext.useContainer();
   const canManagePost = userId === post.author.id;
+  const isAuthenticated = !!userId;
 
   const deletePostModalOnCloseHandler = useCallback(() => setShowDeletePostModal(false), [setShowDeletePostModal]);
   const deletePostModalOnOpenHandler = useCallback(() => setShowDeletePostModal(true), [setShowDeletePostModal]);
@@ -36,6 +40,16 @@ export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
     return deleteResults;
   }, [refetchPosts, deleteOnePost, deletePostModalOnCloseHandler, post.id]);
 
+  const handleSelectAuthor = () => {
+    selectAuthor({ id: post.author.id, fullName: post.author.fullName || '' });
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleSelectAuthor();
+    }
+  };
+
   return (
     <div key={post.id}>
       <TitleContainer>
@@ -47,7 +61,14 @@ export function Post({ post, refetchPosts }: IPostProps): JSX.Element {
           <Icon icon="trash" size={18} />
         </ActionIcon>
       </TitleContainer>
-      <p>{`By ${post.author.fullName}`}</p>
+      By{' '}
+      {isAuthenticated ? (
+        <Link role="link" tabIndex={0} onClick={handleSelectAuthor} onKeyPress={handleKeyPress}>
+          {post.author.fullName}
+        </Link>
+      ) : (
+        <>{post.author.fullName}</>
+      )}
       <p>{formatDateTime(post.createdAt)}</p>
       <p>{post.text}</p>
       <DeleteModal
@@ -102,4 +123,9 @@ const ActionIcon = styled.div<IActionIconProps>`
     }
     pointer-events: none;
   `}
+`;
+
+const Link = styled.a`
+  color: var(--brand-red) !important;
+  cursor: pointer;
 `;

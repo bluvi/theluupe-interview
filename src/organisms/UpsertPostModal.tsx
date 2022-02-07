@@ -15,7 +15,7 @@ export type IAddPostModalProps = {
   post?: IPost;
   show: boolean;
   onClose: () => void;
-  refetchPosts: () => Promise<void>;
+  refetchPosts: () => Promise<ApolloQueryResult<unknown>>;
 };
 
 export function UpsertPostModal({ post, show, onClose, refetchPosts }: IAddPostModalProps): JSX.Element {

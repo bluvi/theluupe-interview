@@ -7,6 +7,20 @@ fragment UserInfo on User {
   totalPosts
 }
 
+fragment UserPosts on User {
+  posts {
+    id
+    createdAt
+    updatedAt
+    title
+    text
+    author {
+      id
+      fullName
+    }
+  }
+}
+
 fragment UserToken on UserTokenResponse {
   user {
     email

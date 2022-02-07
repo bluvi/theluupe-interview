@@ -14,7 +14,6 @@ const Wrapper = styled.div<ICentralizeWrapper>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: stretch;
   margin: 0 auto;
 `;
 

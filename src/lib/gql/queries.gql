@@ -6,6 +6,12 @@ query GetUsers {
   }
 }
 
+query GetUserPosts($userId: String!) {
+  user(where: { id: $userId}) {
+    ...UserPosts
+  }
+}
+
 query GetPosts {
   posts {
     ...PostInfo
