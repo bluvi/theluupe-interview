@@ -67,6 +67,11 @@ export function HorizontalNav() {
               <a className="nav-link">POSTS</a>
             </Link>
           </Nav.Item>
+          <Nav.Item className="mr-1">
+            <Link href="/users">
+              <a className="nav-link">USERS</a>
+            </Link>
+          </Nav.Item>
         </div>
         {isAuthenticated && (
           <Nav.Item>

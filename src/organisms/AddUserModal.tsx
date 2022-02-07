@@ -6,6 +6,7 @@ import { SubmitButton } from '@molecules/forms/SubmitButton';
 import { TextField } from '@molecules/forms/TextField';
 import { ModalHeader } from '@molecules/ModalHeader';
 import { User as UserSchema } from '@shared/validation/schemas';
+import { ApolloQueryResult } from 'apollo-client';
 import React, { useCallback } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -13,23 +14,24 @@ import Modal from 'react-bootstrap/Modal';
 export type IAddUserModalProps = {
   show: boolean;
   onClose: () => void;
+  refetchUsers: () => Promise<ApolloQueryResult<unknown>>;
 };
 
-export function AddUserModal({ show, onClose }: IAddUserModalProps): JSX.Element {
+export function AddUserModal({ show, onClose, refetchUsers }: IAddUserModalProps): JSX.Element {
   const [createOneUser] = useMutation(CreateOneUser);
   const initialValues = {};
 
   const handleSubmit = useCallback(
     async (user: Partial<IUser>) => {
-      const createResults = await createOneUser({
+      await createOneUser({
         variables: {
           data: user,
         },
       });
+      await refetchUsers();
       onClose();
-      return createResults;
     },
-    [onClose, createOneUser],
+    [onClose, createOneUser, refetchUsers],
   );
 
   return (

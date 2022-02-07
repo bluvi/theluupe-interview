@@ -8,12 +8,12 @@ import { PublicLayout } from '@templates/Layout';
 import { UsersManager } from '@templates/UsersManager';
 
 function Users() {
-  const { data, loading } = useQuery(GetUsers);
+  const { data, loading, refetch } = useQuery(GetUsers);
   const users = data?.users || [];
 
   return (
     <PublicLayout loading={loading}>
-      <UsersManager users={users} />
+      <UsersManager users={users} refetchUsers={refetch} />
     </PublicLayout>
   );
 }

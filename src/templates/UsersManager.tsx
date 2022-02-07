@@ -2,12 +2,14 @@ import { IUser } from '@dal/User';
 import styled from '@emotion/styled';
 import { Table } from '@molecules/Table';
 import { AddUserModal } from '@organisms/AddUserModal';
+import { ApolloQueryResult } from 'apollo-client';
 import React, { useCallback, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
-type IUsersManagerProps = {
+interface IUsersManagerProps {
   users: IUser[];
-};
+  refetchUsers: () => Promise<ApolloQueryResult<unknown>>;
+}
 
 const columns = [
   { Header: 'Email', accessor: 'email' },
@@ -15,7 +17,7 @@ const columns = [
   { Header: 'Number of Posts', accessor: 'totalPosts' },
 ];
 
-export function UsersManager({ users }: IUsersManagerProps): JSX.Element {
+export function UsersManager({ users, refetchUsers }: IUsersManagerProps): JSX.Element {
   const [showUserModal, setShowUserModal] = useState(false);
 
   const userModalOnCloseHandler = useCallback(() => setShowUserModal(false), [setShowUserModal]);
@@ -29,14 +31,10 @@ export function UsersManager({ users }: IUsersManagerProps): JSX.Element {
 
       <Table data={users} columns={columns} />
 
-      <AddUserModal show={showUserModal} onClose={userModalOnCloseHandler} />
+      <AddUserModal show={showUserModal} onClose={userModalOnCloseHandler} refetchUsers={refetchUsers} />
     </>
   );
 }
-
-UsersManager.defaultProps = {
-  users: [],
-};
 
 const CustomButton = styled(Button)`
   padding: 0;
