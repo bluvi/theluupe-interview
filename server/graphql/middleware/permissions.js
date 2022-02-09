@@ -16,7 +16,10 @@ const r = {
     const id = args.where ? args.where.id : args.id;
     try {
       const user = await ctx.prisma.user.findUnique({ where: { id } });
-      return ctx?.userId === user.id;
+      if (!ctx || !user) {
+        return false;
+      }
+      return ctx.userId === user.id;
     } catch (e) {
       return e;
     }
@@ -31,7 +34,10 @@ const r = {
           },
         })
         .author();
-      return ctx?.userId === author?.id;
+      if (!ctx || !author) {
+        return false;
+      }
+      return ctx.userId === author.id;
     } catch (e) {
       return e;
     }

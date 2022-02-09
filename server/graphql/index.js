@@ -14,11 +14,14 @@ const schema = makeSchema({
 });
 
 const context = ({ request }) => {
-  const token = request?.headers?.authorization ? decodeAuthHeader(request.headers.authorization) : null;
+  const token =
+    request && request.headers && request.headers.authorization
+      ? decodeAuthHeader(request.headers.authorization)
+      : null;
   return {
     ...request,
     prisma,
-    userId: token?.id,
+    userId: token ? token.id : null,
   };
 };
 
